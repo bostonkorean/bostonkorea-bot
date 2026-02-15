@@ -18,7 +18,14 @@ echo [3/4] exe 파일 생성 중...
 pyinstaller --noconfirm --onefile --windowed ^
     --name "BostonKoreaBot" ^
     --add-data "bostonkorea_bot.py;." ^
+    --add-data "config_manager.py;." ^
+    --add-data "social_poster.py;." ^
+    --add-data "media_generator.py;." ^
     --hidden-import customtkinter ^
+    --hidden-import tweepy ^
+    --hidden-import instagrapi ^
+    --hidden-import imageio ^
+    --hidden-import PIL ^
     --collect-all customtkinter ^
     app.py
 
