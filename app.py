@@ -4,6 +4,7 @@
 """
 
 import os
+import sys
 import platform
 import subprocess
 import customtkinter as ctk
@@ -19,8 +20,14 @@ from media_generator import CardGenerator, VideoGenerator
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
+# 앱 기본 경로 (PyInstaller exe일 때는 exe 위치, 아니면 스크립트 위치)
+if getattr(sys, 'frozen', False):
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # 생성 파일 저장 디렉토리
-GENERATED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generated")
+GENERATED_DIR = os.path.join(APP_DIR, "generated")
 os.makedirs(GENERATED_DIR, exist_ok=True)
 
 

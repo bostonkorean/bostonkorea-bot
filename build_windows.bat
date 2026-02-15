@@ -27,6 +27,7 @@ pyinstaller --noconfirm --onefile --windowed ^
     --hidden-import imageio ^
     --hidden-import PIL ^
     --collect-all customtkinter ^
+    --collect-all imageio_ffmpeg ^
     app.py
 
 echo [4/4] 정리 중...

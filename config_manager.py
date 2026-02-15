@@ -5,8 +5,15 @@
 
 import json
 import os
+import sys
 
-CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+# PyInstaller exe일 때는 exe 위치, 아니면 스크립트 위치
+if getattr(sys, 'frozen', False):
+    _APP_DIR = os.path.dirname(sys.executable)
+else:
+    _APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
+CONFIG_FILE = os.path.join(_APP_DIR, "config.json")
 
 DEFAULT_CONFIG = {
     "x": {
