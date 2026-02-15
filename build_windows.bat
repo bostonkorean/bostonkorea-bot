@@ -27,7 +27,9 @@ pyinstaller --noconfirm --onefile --windowed ^
     --hidden-import imageio ^
     --hidden-import PIL ^
     --collect-all customtkinter ^
+    --collect-all imageio ^
     --collect-all imageio_ffmpeg ^
+    --copy-metadata imageio ^
     app.py
 
 echo [4/4] 정리 중...

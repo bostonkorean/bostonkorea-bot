@@ -37,7 +37,9 @@ jobs:
             --hidden-import imageio `
             --hidden-import PIL `
             --collect-all customtkinter `
+            --collect-all imageio `
             --collect-all imageio_ffmpeg `
+            --copy-metadata imageio `
             app.py
 
       - name: Upload artifact
