@@ -207,7 +207,10 @@ class CardGenerator:
 class VideoGenerator:
     """카드 이미지에서 줌 효과 동영상 생성"""
 
-    def generate(self, card_image_path, output_path=None, duration=5, fps=24):
+    VIDEO_SIZE = (720, 720)
+
+    def generate(self, card_image_path, output_path=None, duration=4, fps=15,
+                 on_progress=None):
         """
         카드 이미지로 줌 효과 동영상 생성.
 
@@ -216,6 +219,7 @@ class VideoGenerator:
             output_path: 출력 동영상 경로 (None이면 임시 파일)
             duration: 동영상 길이 (초)
             fps: 프레임 레이트
+            on_progress: 진행률 콜백 함수 (0~100)
 
         Returns:
             출력 파일 경로
@@ -227,25 +231,31 @@ class VideoGenerator:
             fd, output_path = tempfile.mkstemp(suffix=".mp4")
             os.close(fd)
 
-        img = Image.open(card_image_path).convert("RGB")
-        w, h = img.size
+        vw, vh = self.VIDEO_SIZE
+        img = Image.open(card_image_path).convert("RGB").resize(
+            (vw, vh), Image.BILINEAR
+        )
 
         total_frames = duration * fps
         writer = imageio.get_writer(output_path, fps=fps, macro_block_size=1)
 
         for i in range(total_frames):
             t = i / total_frames
-            # 느린 줌인: 1.0 → 1.12
-            zoom = 1.0 + 0.12 * t
+            zoom = 1.0 + 0.10 * t
 
-            new_w = int(w / zoom)
-            new_h = int(h / zoom)
-            left = (w - new_w) // 2
-            top = (h - new_h) // 2
+            new_w = int(vw / zoom)
+            new_h = int(vh / zoom)
+            left = (vw - new_w) // 2
+            top = (vh - new_h) // 2
 
             cropped = img.crop((left, top, left + new_w, top + new_h))
-            resized = cropped.resize((w, h), Image.LANCZOS)
+            resized = cropped.resize((vw, vh), Image.BILINEAR)
             writer.append_data(np.array(resized))
 
+            if on_progress and i % 10 == 0:
+                on_progress(int((i + 1) / total_frames * 100))
+
         writer.close()
+        if on_progress:
+            on_progress(100)
         return output_path

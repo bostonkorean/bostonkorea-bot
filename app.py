@@ -468,11 +468,17 @@ class BostonKoreaApp(ctk.CTk):
         self.video_status_label.configure(text="동영상 생성 중...")
         self.status_label.configure(text="동영상 생성 중...")
 
+        def on_progress(pct):
+            self.after(0, lambda: self.video_status_label.configure(
+                text=f"동영상 생성 중... {pct}%"))
+
         def do_gen():
             try:
                 generator = VideoGenerator()
                 output = os.path.join(GENERATED_DIR, "card_video.mp4")
-                path = generator.generate(self.card_image_path, output, duration=5, fps=24)
+                path = generator.generate(
+                    self.card_image_path, output,
+                    on_progress=on_progress)
                 self.video_path = path
                 self.after(0, lambda: self._on_video_success(path))
             except Exception as e:
